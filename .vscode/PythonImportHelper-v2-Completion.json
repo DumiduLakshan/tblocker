@@ -1,0 +1,179 @@
+[
+    {
+        "label": "annotations",
+        "importPath": "__future__",
+        "description": "__future__",
+        "isExtraImport": true,
+        "detail": "__future__",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "tempfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tempfile",
+        "description": "tempfile",
+        "detail": "tempfile",
+        "documentation": {}
+    },
+    {
+        "label": "zipfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "zipfile",
+        "description": "zipfile",
+        "detail": "zipfile",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "AESGCM",
+        "importPath": "cryptography.hazmat.primitives.ciphers.aead",
+        "description": "cryptography.hazmat.primitives.ciphers.aead",
+        "isExtraImport": true,
+        "detail": "cryptography.hazmat.primitives.ciphers.aead",
+        "documentation": {}
+    },
+    {
+        "label": "load_cached_key",
+        "kind": 2,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "def load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:\n    try:\n        LICENSE_CACHE.parent.mkdir(parents=True, exist_ok=True)",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "save_cached_key",
+        "kind": 2,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "def save_cached_key(key: str) -> None:\n    try:\n        LICENSE_CACHE.parent.mkdir(parents=True, exist_ok=True)\n        LICENSE_CACHE.write_text(key)\n    except Exception:\n        pass\ndef fetch_payload_key(license_key: str) -> bytes:\n    resp = requests.post(\n        LICENSE_API_URL,\n        json={\"license_key\": license_key},",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "fetch_payload_key",
+        "kind": 2,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "def fetch_payload_key(license_key: str) -> bytes:\n    resp = requests.post(\n        LICENSE_API_URL,\n        json={\"license_key\": license_key},\n        timeout=10,\n    )\n    if resp.status_code != 200:\n        raise RuntimeError(\n            f\"License server rejected key ({resp.status_code}): {resp.text}\"\n        )",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "decrypt_payload",
+        "kind": 2,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "def decrypt_payload(payload_key: bytes) -> bytes:\n    blob = PAYLOAD_FILE.read_bytes()\n    nonce, ciphertext = blob[:12], blob[12:]\n    aesgcm = AESGCM(payload_key)\n    return aesgcm.decrypt(nonce, ciphertext, None)\ndef run_installer(archive_bytes: bytes) -> None:\n    with tempfile.TemporaryDirectory() as tmpdir:\n        tmp_path = Path(tmpdir)\n        archive_path = tmp_path / \"payload.zip\"\n        archive_path.write_bytes(archive_bytes)",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "run_installer",
+        "kind": 2,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "def run_installer(archive_bytes: bytes) -> None:\n    with tempfile.TemporaryDirectory() as tmpdir:\n        tmp_path = Path(tmpdir)\n        archive_path = tmp_path / \"payload.zip\"\n        archive_path.write_bytes(archive_bytes)\n        with zipfile.ZipFile(archive_path) as zf:\n            zf.extractall(tmp_path)\n        installer = tmp_path / \"install.py\"\n        if not installer.exists():\n            raise RuntimeError(\"Decrypted payload missing install.py\")",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "def main() -> int:\n    cached = load_cached_key()\n    prompt = \"Enter license key\"\n    if cached:\n        prompt += f\" [{cached}]\"\n    prompt += \": \"\n    license_key = input(prompt).strip() or cached\n    if not license_key:\n        print(\"License key required.\")\n        return 1",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "LICENSE_API_URL",
+        "kind": 5,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "LICENSE_API_URL = os.getenv(\"TBLOCK_LICENSE_API\", \"https://tblock-licence-api-t4cao.ondigitalocean.app/verify\")\nLICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "LICENSE_CACHE",
+        "kind": 5,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "LICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "PAYLOAD_FILE",
+        "kind": 5,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "PAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:\n    try:",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    }
+]
