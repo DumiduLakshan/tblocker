@@ -17,21 +17,21 @@
         "documentation": {}
     },
     {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
-        "documentation": {}
-    },
-    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "os",
         "description": "os",
         "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "shutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
         "documentation": {}
     },
     {
@@ -136,7 +136,7 @@
         "kind": 2,
         "importPath": "bootstrap_install",
         "description": "bootstrap_install",
-        "peekOfCode": "def run_installer(archive_bytes: bytes) -> None:\n    with tempfile.TemporaryDirectory() as tmpdir:\n        tmp_path = Path(tmpdir)\n        archive_path = tmp_path / \"payload.zip\"\n        archive_path.write_bytes(archive_bytes)\n        with zipfile.ZipFile(archive_path) as zf:\n            zf.extractall(tmp_path)\n        installer = tmp_path / \"install.py\"\n        if not installer.exists():\n            raise RuntimeError(\"Decrypted payload missing install.py\")",
+        "peekOfCode": "def run_installer(archive_bytes: bytes) -> None:\n    with tempfile.TemporaryDirectory() as tmpdir:\n        tmp_path = Path(tmpdir)\n        archive_path = tmp_path / \"payload.zip\"\n        archive_path.write_bytes(archive_bytes)\n        with zipfile.ZipFile(archive_path) as zf:\n            zf.extractall(tmp_path)\n        staging = tmp_path / \"payload\"\n        staging.mkdir()\n        for item in tmp_path.iterdir():",
         "detail": "bootstrap_install",
         "documentation": {}
     },
@@ -154,7 +154,7 @@
         "kind": 5,
         "importPath": "bootstrap_install",
         "description": "bootstrap_install",
-        "peekOfCode": "LICENSE_API_URL = os.getenv(\"TBLOCK_LICENSE_API\", \"https://tblock-licence-api-t4cao.ondigitalocean.app/verify\")\nLICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None",
+        "peekOfCode": "LICENSE_API_URL = os.getenv(\"TBLOCK_LICENSE_API\", \"https://tblock-licence-api-t4cao.ondigitalocean.app/verify\"\")\nLICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\nINSTALL_ROOT = Path(\"/opt/tblockguard\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None",
         "detail": "bootstrap_install",
         "documentation": {}
     },
@@ -163,7 +163,7 @@
         "kind": 5,
         "importPath": "bootstrap_install",
         "description": "bootstrap_install",
-        "peekOfCode": "LICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:",
+        "peekOfCode": "LICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\nINSTALL_ROOT = Path(\"/opt/tblockguard\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None",
         "detail": "bootstrap_install",
         "documentation": {}
     },
@@ -172,7 +172,16 @@
         "kind": 5,
         "importPath": "bootstrap_install",
         "description": "bootstrap_install",
-        "peekOfCode": "PAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:\n    try:",
+        "peekOfCode": "PAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\nINSTALL_ROOT = Path(\"/opt/tblockguard\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:",
+        "detail": "bootstrap_install",
+        "documentation": {}
+    },
+    {
+        "label": "INSTALL_ROOT",
+        "kind": 5,
+        "importPath": "bootstrap_install",
+        "description": "bootstrap_install",
+        "peekOfCode": "INSTALL_ROOT = Path(\"/opt/tblockguard\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None\n    return None\ndef save_cached_key(key: str) -> None:\n    try:",
         "detail": "bootstrap_install",
         "documentation": {}
     }
