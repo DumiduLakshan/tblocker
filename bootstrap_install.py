@@ -12,7 +12,7 @@ from pathlib import Path
 import requests
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-LICENSE_API_URL = os.getenv("TBLOCK_LICENSE_API", "https://tblock-licence-api-t4cao.ondigitalocean.app/verify")
+LICENSE_API_URL = os.getenv("TBLOCK_LICENSE_API", "http://127.0.0.1:9001/verify")
 LICENSE_CACHE = Path("/etc/tblock/license")
 PAYLOAD_FILE = Path(__file__).with_name("payload.bin")
 INSTALL_ROOT = Path("/opt/tblockguard")
