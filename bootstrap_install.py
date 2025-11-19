@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import base64
-import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -12,9 +12,10 @@ from pathlib import Path
 import requests
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-LICENSE_API_URL = os.getenv("TBLOCK_LICENSE_API", "https://tblock-licence-api-t4cao.ondigitalocean.app/verify")
+LICENSE_API_URL = os.getenv("TBLOCK_LICENSE_API", "https://tblock-licence-api-t4cao.ondigitalocean.app/verify"")
 LICENSE_CACHE = Path("/etc/tblock/license")
 PAYLOAD_FILE = Path(__file__).with_name("payload.bin")
+INSTALL_ROOT = Path("/opt/tblockguard")
 
 
 def load_cached_key() -> str | None:
@@ -67,10 +68,23 @@ def run_installer(archive_bytes: bytes) -> None:
         archive_path.write_bytes(archive_bytes)
         with zipfile.ZipFile(archive_path) as zf:
             zf.extractall(tmp_path)
-        installer = tmp_path / "install.py"
+        staging = tmp_path / "payload"
+        staging.mkdir()
+        for item in tmp_path.iterdir():
+            if item.name in {"payload.zip", "payload"}:
+                continue
+            target = staging / item.name
+            if item.is_dir():
+                shutil.copytree(item, target)
+            else:
+                shutil.copy2(item, target)
+        if INSTALL_ROOT.exists():
+            shutil.rmtree(INSTALL_ROOT)
+        shutil.copytree(staging, INSTALL_ROOT)
+        installer = INSTALL_ROOT / "install.py"
         if not installer.exists():
             raise RuntimeError("Decrypted payload missing install.py")
-        subprocess.run([sys.executable, str(installer)], check=True, cwd=tmp_path)
+        subprocess.run([sys.executable, str(installer)], check=True, cwd=INSTALL_ROOT)
 
 
 def main() -> int:
