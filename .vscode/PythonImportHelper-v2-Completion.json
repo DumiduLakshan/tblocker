@@ -154,7 +154,7 @@
         "kind": 5,
         "importPath": "bootstrap_install",
         "description": "bootstrap_install",
-        "peekOfCode": "LICENSE_API_URL = os.getenv(\"TBLOCK_LICENSE_API\", \"http://127.0.0.1:9001/verify\")\nLICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\nINSTALL_ROOT = Path(\"/opt/tblockguard\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None",
+        "peekOfCode": "LICENSE_API_URL = os.getenv(\"TBLOCK_LICENSE_API\", \"https://tblock-licence-api-t4cao.ondigitalocean.app/verify\")\nLICENSE_CACHE = Path(\"/etc/tblock/license\")\nPAYLOAD_FILE = Path(__file__).with_name(\"payload.bin\")\nINSTALL_ROOT = Path(\"/opt/tblockguard\")\ndef load_cached_key() -> str | None:\n    if LICENSE_CACHE.exists():\n        try:\n            return LICENSE_CACHE.read_text().strip()\n        except Exception:\n            return None",
         "detail": "bootstrap_install",
         "documentation": {}
     },
